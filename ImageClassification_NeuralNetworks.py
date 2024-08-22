@@ -70,3 +70,28 @@ for index, img in enumerate(batch[0][:4]):
     ax[index].title.set_text(batch[1][index])
 pyplot.show() #shows the graph
 #--------------------Part 1 Complete-------------------------
+
+#Preprocess Data
+#2.1 Scale Data
+#Transformation to smallest values within the pipeline 
+scaledData = data.map(lambda x,y: (x/255, y))
+#iterating through datasets to grab the next batch
+scaledIterator = scaledData.as_numpy_iterator() 
+#setting batch between 0 and 1
+batch = scaledIterator.next()
+
+#2.2 Split Data
+#Data to train the DLM
+trainingSize = int(len(scaledData) *0.7)
+#Data to evaluate model while training
+validationSize = int(len(scaledData) *0.2)
+#Data used after final evaluation state
+testSize = int(len(scaledData) *0.1)+1
+
+train = data.take(trainingSize)
+#skip first 4
+val = data.skip(trainingSize).take(validationSize)
+test = data.skip(trainingSize+validationSize).take(testSize)
+#--------------------Part 2 Complete-------------------------
+
+
