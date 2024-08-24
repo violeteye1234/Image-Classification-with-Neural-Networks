@@ -3,7 +3,7 @@
 
 #1) Building a Data Pipeline
 #2) Preprocessing Images for Deep Learning
-#3) Creating a deep Neural Network Classifier
+#3) Creating a Deep Neural Network Classifier
 #4) Evaluating Model Performance
 #5) Saving the Model for Deployment
 
@@ -94,4 +94,57 @@ val = data.skip(trainingSize).take(validationSize)
 test = data.skip(trainingSize+validationSize).take(testSize)
 #--------------------Part 2 Complete-------------------------
 
+#Deep Model
+#3.1 Building the Deep Learning Model
+#importing libraries & API
+from tensorflow.keras.models import Sequential
+#importing layers for images & Convulate (Recognise Patterns)
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten
+#form an architecture (multiple layers) to build the neural network
+model = Sequential() #instance of sequential class
+#adding Convulational Layer 
+#16 filters with 3x3px with a stride = 1. Activation = relu (Output is converted to 0 if negative __/ ) 256 height x 256 wide x 3 channels deep
+model.add(Conv2D(16, (3,3), 1, activation ='relu', input_shape=(256,256,3)))
+#adding Max Pooling Layer - Condense image data by selecting max
+model.add(MaxPooling2D())
 
+model.add(Conv2D(32, (3,3),1,activation = 'relu'))
+model.add(MaxPooling2D())
+model.add(Conv2D(16, (3,3),1,activation = 'relu'))
+model.add(MaxPooling2D())
+
+#Single Dimension
+model.add(Flatten())
+
+#Fully connected layers with 256 neurons and relu activation
+model.add(Dense(256, activation = 'relu'))
+#Single output - 0 or 1 
+model.add(Dense(1, activation = 'sigmoid'))
+
+#compile
+model.compile('adam', loss=tensorflow.losses.BinaryCrossentropy(), metrics=['accuracy'])
+summary = model.summary()
+#print(summary)
+
+#3.2 Train
+logDir  = 'logs/'
+#save and log checkpoints
+tensorBoard_callBack = tensorflow.keras.callbacks.TensorBoard(log_dir=logDir)
+#fit - take in training data 
+#train data (4*32), epochs (no. of runs), run evaluation on validation data, and finally log info
+history = model.fit(train, epochs=20, validation_data = val, callbacks = [tensorBoard_callBack]) 
+
+figure1 = pyplot.figure()
+pyplot.plot(history.history['loss'],color='green', label='loss')
+pyplot.plot(history.history['val_loss'], color='red', label='val_loss')
+figure1.suptitle('Loss',fontsize=20)
+pyplot.legend(loc='upper left')
+pyplot.show()
+
+accuracyFigure = pyplot.figure()
+pyplot.plot(history.history['accuracy'],color='green', label='accuracy')
+pyplot.plot(history.history['val_accuracy'], color='red', label='val_accuracy')
+figure1.suptitle('Accuracy',fontsize=20)
+pyplot.legend(loc='upper left')
+pyplot.show()
+#--------------------Part 3 Complete-------------------------
