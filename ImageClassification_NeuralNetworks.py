@@ -7,6 +7,36 @@
 #4) Evaluating Model Performance
 #5) Saving the Model for Deployment
 
+'''
+Flowchart:
+A: Install Dependencies & Setup 
+    A1: Install tensorflow, tensorflow-gpu, opencv-python, matplotlib
+    A2: Limit tensor from using all the VRAM & avoid OOM error
+B: Remove Dodgy Images
+    B1: Check Image Extensions
+    B2: Remove Images not in expected extensions
+C: Load Data
+    C1: Create image dataset
+    C2: Create data iterator to access the dataset
+    C3: Visualise sample images and their labels
+D: Preprocess Data
+    D1: Scale data to 0-1 range
+    D2: Split data into training, validation, and test sets 
+E: Build Deep Learning Model
+    E1: Create a Sequential Model
+    E2: Add Convolutional, Max Pooling and Fully Connected Layers
+    E3: Compile the model
+F: Train Model
+    F1: Train the model using fit method
+    F2: Log Training and Validation Loss, Accuracy using TensorBoard
+G: Evaluate Model Performance
+    G1: Evaluate model performance using Precision, Recall, and Accuracy Metrics
+    G2: Test the model with a sample image
+H: Save Model for Deployment 
+    H1: Save the trained model using save method
+    H2: Load the saved model using load_method
+    H3: Test the loaded model with the same sample image
+'''
 
 #Setup & Load Data
 #1.1 Install Dependencies & Setup 
@@ -32,6 +62,7 @@ import imghdr #checking file extensions
 dataDir = 'data/'
 imgExts = ['jpeg','jpg','bmp','png']
 
+#Scanning through 'data/' directory to remove any images that are not specified in imgExts (Image Extensions)
 for imageClass in os.listdir(dataDir):
     if imageClass.startswith("."):
         continue
@@ -48,7 +79,8 @@ for imageClass in os.listdir(dataDir):
 
 #1.3 Load Data
 #Create a Data Pipeline
-#API AccesS: tensorflow.data.Dataset
+#Loading data to create a data pipeline 
+#API Access: tensorflow.data.Dataset
 import numpy 
 from matplotlib import pyplot
 #Building Image Dataset (Will preprocess for you - resize etc.)
