@@ -148,3 +148,42 @@ figure1.suptitle('Accuracy',fontsize=20)
 pyplot.legend(loc='upper left')
 pyplot.show()
 #--------------------Part 3 Complete-------------------------
+
+#Evaluating Model Performance - Precision, Recall, Accuracy 
+#4.1 Evaluate 
+from tensorflow.keras.metrics import Precision, Recall, BinaryAccuracy
+#creating instances
+pre = Precision()
+rec = Recall()
+acc = BinaryAccuracy()
+
+#loop through testing data batch
+for batch in test.as_numpy_iterator():
+    X, y = batch
+    yhat = model.predict(X)
+    pre.update_state(y, yhat)
+    rec.update_state(y, yhat)
+    acc.update_state(y, yhat)
+print(f'Precision: {pre.result().numpy()}, Recall = {rec.result().numpy()}, Accuracy = {acc.result().numpy()}')
+
+#4.2 test
+img = cv2.imread('happyFaceTest.png')
+pyplot.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+pyplot.show()
+
+#resize to 256x256x3
+resize = tensorflow.image.resize(img, (256,256))
+pyplot.imshow(resize.numpy().astype(int))
+pyplot.show()
+
+#encapsulate shape 
+numpy.expand_dims(resize,0)
+yhat = model.predict(numpy.expand_dims(resize/255,0))
+
+#round down if 50% for binary classification 
+if yhat >0.5:
+    print("Predicted Class is Sad")
+else:
+    print("Predicted Class is Happy")
+
+#--------------------Part 4 Complete-------------------------
