@@ -187,3 +187,17 @@ else:
     print("Predicted Class is Happy")
 
 #--------------------Part 4 Complete-------------------------
+
+#Saving Model for Deployment 
+#5.1 Save the model 
+from tensorflow.keras.models import load_model
+#saving inside models folder
+model.save(os.path.join('models','happysadmodel.h5'))
+newModel = load_model(os.path.join('models','happysadmodel.h5'))
+yhatnew = newModel.predict(numpy.expand_dims(resize/255,0))
+if yhatnew >0.5:
+    print("Predicted Class is Sad")
+else:
+    print("Predicted Class is Happy")
+
+#--------------------Part 5 Complete-------------------------
